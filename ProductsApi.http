@@ -1,0 +1,108 @@
+@base = http://localhost:5182
+
+##########  Auth (dev)  ##########
+
+### 1. Get a dev JWT — SEND THIS ONE FIRST (requests below read its response)
+# @name devtoken
+GET {{base}}/dev/token
+
+### 2. Secured POST WITHOUT a token  ->  401 Unauthorized
+POST {{base}}/v1/products
+Content-Type: application/json
+
+{ "name": "NoAuth", "price": 10, "categoryId": 1 }
+
+### 3. Secured POST WITH the token  ->  201 Created  (run #1 first!)
+POST {{base}}/v1/products
+Content-Type: application/json
+Authorization: Bearer {{devtoken.response.body.$.access_token}}
+
+{ "name": "AuthedWebcam", "price": 40, "categoryId": 1 }
+
+### 4. Get an ADMIN dev JWT (adds role=admin) — SEND before the admin DELETE below
+# @name admintoken
+GET {{base}}/dev/token?admin=true
+
+### 5. DELETE with the NON-admin token  ->  403 Forbidden (authenticated, but not an admin)
+DELETE {{base}}/v1/products/3
+Authorization: Bearer {{devtoken.response.body.$.access_token}}
+
+### 6. DELETE with the ADMIN token  ->  204 No Content  (run #4 first!)
+DELETE {{base}}/v1/products/3
+Authorization: Bearer {{admintoken.response.body.$.access_token}}
+
+##########  API v1  ##########
+
+### v1 - List all products (200)
+GET {{base}}/v1/products
+
+### v1 - Get one product (200)
+GET {{base}}/v1/products/1
+
+### v1 - Get a missing product (404)
+GET {{base}}/v1/products/999
+
+### v1 - Create a product (201 Created + Location header)
+POST {{base}}/v1/products
+Content-Type: application/json
+
+{
+  "name": "Headset",
+  "price": 59.99,
+  "categoryId": 1
+}
+
+### v1 - Create with a NON-EXISTENT category (400 ProblemDetails)
+POST {{base}}/v1/products
+Content-Type: application/json
+
+{
+  "name": "Headset",
+  "price": 59.99,
+  "categoryId": 999
+}
+
+### v1 - Create an INVALID product (400 ProblemDetails from the filter)
+POST {{base}}/v1/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": -5,
+  "categoryId": 1
+}
+
+### v1 - Update a product (204 No Content)
+PUT {{base}}/v1/products/1
+Content-Type: application/json
+
+{
+  "name": "Keyboard Pro",
+  "price": 39.99,
+  "categoryId": 1
+}
+
+### v1 - Delete a product (needs admin token; 204, then 404 on re-run)
+DELETE {{base}}/v1/products/2
+Authorization: Bearer {{admintoken.response.body.$.access_token}}
+
+##########  API v2 (adds DisplayPrice)  ##########
+
+### v2 - List all products (200) - note the extra "DisplayPrice" field
+GET {{base}}/v2/products
+
+##########  Relationships  ##########
+
+### Product with its category name (navigates Product -> Category)
+GET {{base}}/v1/products/1/with-category
+
+### Categories with product counts (reverse navigation Category -> Products)
+GET {{base}}/v1/categories
+
+##########  Pagination  ##########
+
+### Page 1, 2 per page (Skip/Take -> SQL OFFSET/LIMIT) - watch the console for the SQL
+GET {{base}}/v1/products/page?page=1&size=2
+
+### Page 2, 2 per page
+GET {{base}}/v1/products/page?page=2&size=2
