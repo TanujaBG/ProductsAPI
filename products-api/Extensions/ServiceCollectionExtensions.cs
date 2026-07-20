@@ -19,6 +19,15 @@ public static class ServiceCollectionExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
+        // CORS - allow the React dev server (Vite) to call this API from the browser.
+        services.AddCors(options =>
+        {
+            options.AddPolicy("frontend", policy =>
+                policy.WithOrigins("http://localhost:5173")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod());
+        });
+
         // EF Core (Scoped) backed by SQLite. For Azure SQL: options.UseSqlServer(connectionString).
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -31,12 +40,10 @@ public static class ServiceCollectionExtensions
 
         // JWT bearer authentication. For REAL Entra ID, replace the options body with:
         //   options.Authority = "https://login.microsoftonline.com/<tenant-id>/v2.0";
-        //   options.Audience  = "<api-app-id>";   // and delete IssuerSigningKey (Entra publishes its keys).
+        //   options.Audience  = "<api-app-id>";
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                // Keep the JWT claim names exactly as minted (sub, scope, role) instead of remapping
-                // them to long WS-* URIs, so RequireClaim("scope", ...) and RoleClaimType line up.
                 options.MapInboundClaims = false;
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -55,10 +62,7 @@ public static class ServiceCollectionExtensions
         // Named authorization policies, applied to endpoints via RequireAuthorization("name").
         services.AddAuthorization(options =>
         {
-            // Write access: the token must carry the products.write scope.
             options.AddPolicy("products.write", policy => policy.RequireClaim("scope", "products.write"));
-
-            // Delete access: the caller must be in the admin role.
             options.AddPolicy("admin", policy => policy.RequireRole("admin"));
         });
 

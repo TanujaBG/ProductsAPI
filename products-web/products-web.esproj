@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.SDK/1.0.6098695">
+  <PropertyGroup>
+    <!-- Debug / F5 in Visual Studio launches the Vite dev server. -->
+    <StartupCommand>npm run dev</StartupCommand>
+    <!-- Building the project runs the Vite production build into dist/. -->
+    <BuildCommand>npm run build</BuildCommand>
+    <ProductionBuildCommand>npm run build</ProductionBuildCommand>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
+  </PropertyGroup>
+</Project>

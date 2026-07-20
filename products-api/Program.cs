@@ -25,6 +25,9 @@ if (app.Environment.IsDevelopment())
     app.MapDevEndpoints();
 }
 
+// CORS must run before auth so cross-origin (and preflight) requests are allowed through.
+app.UseCors("frontend");
+
 // Auth middleware: identity (authN) THEN access (authZ). Order matters.
 app.UseAuthentication();
 app.UseAuthorization();

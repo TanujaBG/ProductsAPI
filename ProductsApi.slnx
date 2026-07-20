@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Practice/Practice.csproj" />
+  <Project Path="products-web/products-web.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="products-api/ProductsApi.csproj" />
+</Solution>

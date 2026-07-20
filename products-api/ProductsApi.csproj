@@ -4,6 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- The React app (products-web) lives in this repo; keep it out of the .NET build globbing. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);products-web\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
