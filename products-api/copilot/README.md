@@ -17,7 +17,7 @@ This folder records daily progress and the roadmap.
 | 2 | 3 · EF Core + Azure SQL | DbContext, migrations, relationships, tracking, perf | ✅ Done |
 | 2 | 4 · AuthN/AuthZ with Entra ID | JWT, OAuth2, OIDC, policies, scopes & roles | ✅ Done |
 | 3 | 5 · Frontend integration (React) | consume the API, CORS, tokens, state | 🔄 In progress |
-| 3 | 6 · Azure hosting options | App Service, Container Apps, AKS, Functions | ⏳ Planned |
+| 3 | 6 · Azure hosting options | App Service, Container Apps, AKS, Functions | ✅ Done |
 | 4 | 7 · Azure Storage | Blob, Queue, Table; SDK, SAS tokens, lifecycle | ⏳ Planned |
 | 4 | 8 · Event-driven design | Service Bus / Event Grid / Event Hubs | ⏳ Planned |
 | 5 | 9 · Caching & performance | Redis, in-memory/distributed, response/output caching | ⏳ Planned |
@@ -25,7 +25,7 @@ This folder records daily progress and the roadmap.
 | 6 | 11 · CI/CD | GitHub Actions **+** Azure DevOps Pipelines | ⏳ Planned |
 | 7 | 12 · IaC & architecture | Bicep (+ Terraform), Well-Architected, cost | ⏳ Planned |
 
-> ✅ **Full 12-topic plan confirmed (2026-07-20).** Days 1–2 complete · Day 3 in progress.
+> ✅ **Full 12-topic plan confirmed (2026-07-20).** Days 1–2 ✅ · Day 3: Topic 6 ✅, Topic 5 🔄 (frontend built; auth-in-UI + state pending).
 
 ---
 
@@ -75,25 +75,26 @@ This folder records daily progress and the roadmap.
 - Common auth mistakes + 10 interview Q&A.
 - Verified live: `201` / `401` / `403` / `204`.
 
-**Where the code lives (`ProductsApi/`):**
-`Auth/` · `Models/` · `Contracts/` · `Data/` · `Filters/` · `Extensions/` · `Endpoints/` · `Migrations/` · thin `Program.cs` composition root.
+**Where the code lives** — the repo is now a **monorepo** under `ProductsApi.slnx`:
+- `products-api/` — the .NET API (`Auth/ Models/ Contracts/ Data/ Filters/ Extensions/ Endpoints/ Migrations/`, thin `Program.cs`).
+- `products-web/` — the React + TypeScript frontend (Vite).
+- `Practice/` — the Day-1 C# exercises console app.
 
 ---
 
-## 🔜 Next up
+## 🚧 Day 3 — Frontend & Hosting
 
-### Day 3 · Topic 5 — Frontend integration (React) 🔄
-Build a **React + TypeScript** (Vite) app that consumes `ProductsApi`:
-1. **Project setup** — scaffold with Vite.
-2. **CORS** — allow the browser origin to call the API (`AddCors` / `UseCors`).
-3. **Calling APIs** — a typed `fetch` client; render the product list.
-4. **Auth token handling** — mint a dev token, attach `Bearer`, do a secured POST.
-5. **State management** — loading/error/data via hooks → then TanStack Query.
-- *Blazor alternative noted throughout.* · Deliverables: hands-on UI, best practices, 10 interview Q&A.
+**Topic 5 · Frontend integration (React)** 🔄 — *Increment 1 done:*
+- Scaffolded **React + TypeScript** (Vite); the app + API now share one solution (`.slnx`) and Git repo.
+- **CORS** on the API (`AddCors`/`UseCors`) allowing the Vite origin (`localhost:5173`).
+- A typed `fetch` client (`api.ts`) + `App.tsx` rendering the live product list (loading/error/data state) — verified end-to-end.
+- *Remaining:* auth token handling in the UI, state management (TanStack Query), 10 Q&A.
 
-### Day 3 · Topic 6 — Azure hosting options ⏳
-Compare **App Service, Container Apps, AKS, Azure Functions** — when to use each, scaling, pricing, deployment.
-Hands-on: deploy the API to **App Service** + a **containerized** deploy · decision matrix · 10 interview Q&A.
+**Topic 6 · Azure hosting options** ✅ — compared **App Service / Container Apps / AKS / Functions** (when-to-use, scaling, pricing, cold starts), a **decision matrix**, and **10 interview Q&A**; recommended **App Service** for this API. *(Optional hands-on deploy pending an Azure subscription.)*
+
+---
+
+## 🔜 Coming up
 
 ### Day 4 · Topic 7 — Azure Storage ⏳
 **Blob, Queue, Table** storage — SDK usage from .NET, common patterns, **SAS tokens**, lifecycle management.
