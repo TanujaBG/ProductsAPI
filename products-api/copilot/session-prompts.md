@@ -51,3 +51,8 @@ Copy-paste-ready prompts, one per topic. Each is **self-contained** so a fresh c
 
 ## Day 7 — Topic 12: IaC & architecture
 > Day 7 of my 7-day .NET full-stack Azure prep. Teach me Infrastructure as Code with Bicep (and Terraform basics) plus cloud architecture: provisioning App Service/SQL/Storage, secure design (Key Vault, managed identities, networking), the Well-Architected Framework, and cost optimization. Give me a hands-on Bicep deployment, a reference architecture for a full-stack app, and 10 interview questions with answers.
+
+---
+
+## Added — Topic 13: SQL Server & T-SQL (data deep-dive)
+> Add-on to my .NET/Azure prep, complementing the EF Core topic (Topic 3). Teach me SQL Server / T-SQL by hand: database & table design, SELECT/WHERE/ORDER BY, INNER/LEFT JOINs, GROUP BY/HAVING with aggregates, subqueries and EXISTS, CTEs, window functions (ROW_NUMBER/RANK, running totals), pagination (OFFSET/FETCH), indexes and reading execution plans, stored procedures, and transactions with isolation levels. Give me a hands-on script I run against SQL Server LocalDB, common pitfalls, and 10 interview questions with answers.

@@ -8,7 +8,7 @@ This folder records daily progress and the roadmap.
 
 ---
 
-## 🗺️ 7-Day plan (12 topics)
+## 🗺️ 7-Day plan (13 topics)
 
 | Day | Topic | Focus | Status |
 |-----|-------|-------|--------|
@@ -16,7 +16,7 @@ This folder records daily progress and the roadmap.
 | 1 | 2 · Building REST APIs | CRUD, validation, ProblemDetails, versioning, Swagger | ✅ Done |
 | 2 | 3 · EF Core + Azure SQL | DbContext, migrations, relationships, tracking, perf | ✅ Done |
 | 2 | 4 · AuthN/AuthZ with Entra ID | JWT, OAuth2, OIDC, policies, scopes & roles | ✅ Done |
-| 3 | 5 · Frontend integration (React) | consume the API, CORS, tokens, state | 🔄 In progress |
+| 3 | 5 · Frontend integration (React) | consume the API, CORS, tokens, state | ✅ Done |
 | 3 | 6 · Azure hosting options | App Service, Container Apps, AKS, Functions | ✅ Done |
 | 4 | 7 · Azure Storage | Blob, Queue, Table; SDK, SAS tokens, lifecycle | ⏳ Planned |
 | 4 | 8 · Event-driven design | Service Bus / Event Grid / Event Hubs | ⏳ Planned |
@@ -24,8 +24,9 @@ This folder records daily progress and the roadmap.
 | 5 | 10 · Observability | App Insights, ILogger, OpenTelemetry, metrics, KQL | ⏳ Planned |
 | 6 | 11 · CI/CD | GitHub Actions **+** Azure DevOps Pipelines | ⏳ Planned |
 | 7 | 12 · IaC & architecture | Bicep (+ Terraform), Well-Architected, cost | ⏳ Planned |
+| + | 13 · SQL Server & T-SQL *(added 2026-07-29)* | T-SQL, JOINs, GROUP BY, CTEs, window fns, indexes & execution plans, stored procs, transactions/isolation | 🔄 Today |
 
-> ✅ **Full 12-topic plan confirmed (2026-07-20).** Days 1–2 ✅ · Day 3: Topic 6 ✅, Topic 5 🔄 (frontend built; auth-in-UI + state pending).
+> ✅ **Plan confirmed (2026-07-20).** Days 1–3 ✅ complete (Topics 5 & 6 done). **Topic 13 · SQL Server & T-SQL added 2026-07-29** — a data deep-dive complementing Topic 3 (EF Core); practicing it today. Day 4 (Azure Storage) still queued.
 
 ---
 
@@ -82,19 +83,33 @@ This folder records daily progress and the roadmap.
 
 ---
 
-## 🚧 Day 3 — Frontend & Hosting
+## ✅ Day 3 — Frontend & Hosting
 
-**Topic 5 · Frontend integration (React)** 🔄 — *Increment 1 done:*
-- Scaffolded **React + TypeScript** (Vite); the app + API now share one solution (`.slnx`) and Git repo.
-- **CORS** on the API (`AddCors`/`UseCors`) allowing the Vite origin (`localhost:5173`).
-- A typed `fetch` client (`api.ts`) + `App.tsx` rendering the live product list (loading/error/data state) — verified end-to-end.
-- *Remaining:* auth token handling in the UI, state management (TanStack Query), 10 Q&A.
+**Topic 5 · Frontend integration (React)** ✅
+- *Increment 1:* Scaffolded **React + TypeScript** (Vite); the app + API share one solution (`.slnx`) and Git repo. **CORS** on the API (`AddCors`/`UseCors`) allowing the Vite origin (`localhost:5173`). A typed `fetch` client (`api.ts`) rendering the live product list.
+- *Increment 2 — state management:* **TanStack Query** — `useQuery` for reads, `useMutation` + `invalidateQueries(['products'])` for writes (`QueryClientProvider` in `main.tsx`; hooks in `hooks.ts`). Server state replaces the hand-rolled `useEffect`/`useState`.
+- *Increment 2 — auth in the UI:* provider-agnostic seam (`auth.tsx` → `AuthProvider`/`useAuth`) minting dev JWTs via `/dev/token`; **Bearer** header on writes; UI gated by **scope** (`products.write` → create form) and **role** (`admin` → delete); **401 vs 403** surfaced as friendly messages. Structured for a one-file swap to **Entra ID / MSAL**.
+- Builds clean (`npm run build`, 76 modules). Concept → hands-on → pitfalls → **10 interview Q&A** delivered.
 
 **Topic 6 · Azure hosting options** ✅ — compared **App Service / Container Apps / AKS / Functions** (when-to-use, scaling, pricing, cold starts), a **decision matrix**, and **10 interview Q&A**; recommended **App Service** for this API. *(Optional hands-on deploy pending an Azure subscription.)*
 
 ---
 
-## 🔜 Coming up
+## � Added — Topic 13 · SQL Server & T-SQL (2026-07-29)
+
+A data deep-dive that complements Topic 3 (there, EF Core *generated* SQL against SQLite; here we write raw **T-SQL** by hand). Practiced locally against **SQL Server LocalDB** (`(localdb)\MSSQLLocalDB`) using `sqlcmd`.
+- **Schema & seed** — `ShopPractice` DB with `Categories`, `Products`, `Customers`, `Orders`, `OrderItems` (idempotent `DROP … IF EXISTS` → `CREATE`).
+- **Querying** — `SELECT`/`WHERE`/`ORDER BY`, `INNER`/`LEFT JOIN`, `GROUP BY`/`HAVING` + aggregates, subqueries & `EXISTS`.
+- **CTEs & window functions** — `ROW_NUMBER`/`RANK` (per-category), running totals via `SUM() OVER (…)`.
+- **Pagination** — `OFFSET … FETCH NEXT`.
+- **Indexes & plans** — a nonclustered index + `SET STATISTICS IO`; how to read an execution plan.
+- **Programmability** — a stored procedure and a **transaction** with an explicit isolation level (`TRY`/`CATCH` + `ROLLBACK`).
+- **Artifact:** `sql-practice/shop-practice.sql` — run with `sqlcmd -S "(localdb)\MSSQLLocalDB" -E -i sql-practice\shop-practice.sql`.
+- Concept → hands-on → pitfalls → **10 interview Q&A**.
+
+---
+
+## �🔜 Coming up
 
 ### Day 4 · Topic 7 — Azure Storage ⏳
 **Blob, Queue, Table** storage — SDK usage from .NET, common patterns, **SAS tokens**, lifecycle management.
