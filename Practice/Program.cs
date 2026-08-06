@@ -1,6 +1,7 @@
 ﻿using Practice;
 using Algos;
 using Algo;
+using Practice.Geico;
 
 // Uncomment the exercise you want to run:
 // Record.Run();
@@ -8,5 +9,6 @@ using Algo;
 // await AsyncDemo.RunAsync();
 //NullableRefTypes.Run();
 
-FindTwoSums.Run();
+var test = new ShrinkStringTests();
+test.RunTests();
 
