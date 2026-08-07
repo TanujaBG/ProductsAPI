@@ -70,6 +70,73 @@ namespace Practice
             return res; 
         }
 
+        
+        public int solution(int N, string S)
+        {
+            if(string.IsNullOrEmpty || S.Length <= 1)
+            {
+                return N * 2;
+            }
+
+            // row number -> reserved seats in that row
+            Dictionary<int, bool[]> reservedSeats = new();
+
+            // Build dictionary from reserved seat string
+            string[] seats = S.Split(' ');
+
+            foreach (string seat in seats)
+            {
+                // Example: "12A"
+                int row = int.Parse(seat.Substring(0, seat.Length - 1));
+                char seatLetter = seat[seat.Length - 1];
+                reservedSeats.TryAdd(row, new bool[11]);
+                reservedSeats[row][seatLetter - 'A'] = true;
+            }
+
+            int result = 0;
+
+            // Go through every row
+            for (int row = 1; row <= N; row++)
+            {
+                // No reserved seats in this row -> 2 families
+                if (!reservedSeats.TryGetValue(row, out var seatList))
+                {
+                    result += 2;
+                    continue;
+                }
+
+                if (!seatList[1] &&
+                    !seatList[2] &&
+                    !seatList[3] &&
+                    !seatList[4])
+                {
+                    result += 1;
+                    if (!seatList[5] &&
+                        !seatList[6] &&
+                        !seatList[7] &&
+                        !seatList[9])
+                    {
+                        result += 1;
+                    }
+                }
+                else if (!seatList[3] &&
+                        !seatList[4] &&
+                        !seatList[5] &&
+                        !seatList[6])
+                {
+                    result += 1;
+                }
+                else if (!seatList[5] &&
+                        !seatList[6] &&
+                        !seatList[7] &&
+                        !seatList[9])
+                {
+                    result += 1;
+                }
+            }
+
+            return result;
+        }
 
         public static void Run()
         {
